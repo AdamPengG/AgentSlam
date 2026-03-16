@@ -1,0 +1,25 @@
+# Local reference repositories
+refs/
+
+# Runtime outputs and datasets
+bags/
+*.bag
+*.db
+*.sqlite
+*.log
+
+# Build artifacts
+build/
+install/
+log/
+
+# Python caches and virtualenvs
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.cache/
+
+# OS files
+.DS_Store

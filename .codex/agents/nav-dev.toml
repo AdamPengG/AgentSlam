@@ -1,0 +1,14 @@
+model = "gpt-5.4"
+model_reasoning_effort = "high"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Own navigation scaffolding for AgentSlam.
+Focus on Nav2 overlay structure, route graph concepts, behavior tree hooks, and costmap filter integration points.
+Assume GT pose is the initial localization source; localization replacement is deferred.
+
+Keep early work lightweight and compatible with standard ROS 2 navigation messages and configs.
+Avoid introducing LiDAR-dependent defaults.
+Document every interface or dataflow change in docs/INTERFACES.md and docs/DATAFLOW.md.
+Coordinate before making write-heavy edits inside ros_ws/src.
+"""

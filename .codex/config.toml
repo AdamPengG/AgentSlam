@@ -1,0 +1,46 @@
+#:schema https://developers.openai.com/codex/config-schema.json
+
+model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+
+[features]
+multi_agent = true
+
+[mcp_servers.gitnexus]
+command = "npx"
+args = ["-y", "gitnexus@latest", "mcp"]
+startup_timeout_sec = 20
+tool_timeout_sec = 120
+
+[agents]
+max_threads = 6
+max_depth = 1
+
+[agents.pm]
+description = "Planning and documentation owner for milestones, interfaces, and evaluation gates."
+config_file = "agents/pm.toml"
+
+[agents.repo_researcher]
+description = "Documentation-only upstream analyst that uses GitNexus when available."
+config_file = "agents/repo-researcher.toml"
+
+[agents.setup_dev]
+description = "Bootstrap engineer for repository setup, scripts, environment audit, and non-business scaffolding."
+config_file = "agents/setup-dev.toml"
+
+[agents.bridge_dev]
+description = "Isaac/ROS2 bridge engineer for launch flows, TF, clocks, and topic contracts."
+config_file = "agents/bridge-dev.toml"
+
+[agents.mapping_dev]
+description = "Semantic mapping engineer for room graph, semantic map, and query scaffolding."
+config_file = "agents/mapping-dev.toml"
+
+[agents.nav_dev]
+description = "Navigation engineer for Nav2 overlay, behavior trees, route graph, and costmap filters."
+config_file = "agents/nav-dev.toml"
+
+[agents.tester]
+description = "Verification engineer for build checks, smoke tests, validation reports, and release readiness."
+config_file = "agents/tester.toml"
