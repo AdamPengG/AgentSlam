@@ -1,0 +1,49 @@
+name: robotics-ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  phase1-check:
+    runs-on:
+      - self-hosted
+      - linux
+      - agentslam
+    timeout-minutes: 90
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Runner sanity
+        shell: bash
+        run: |
+          python3 --version
+          /usr/bin/python3 --version
+          colcon --version
+          codex --version || true
+
+      - name: Phase 1 CI suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ops/phase1_ci_suite.sh \
+            --mode ci \
+            --artifact-dir "${GITHUB_WORKSPACE}/artifacts/ci/${GITHUB_RUN_ID}" \
+            --report-path "${GITHUB_WORKSPACE}/reports/robotics_ci_${GITHUB_RUN_ID}.md"
+
+      - name: Upload reports and artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: robotics-ci-${{ github.run_id }}
+          path: |
+            reports/robotics_ci_${{ github.run_id }}.md
+            artifacts/ci/${{ github.run_id }}/
+

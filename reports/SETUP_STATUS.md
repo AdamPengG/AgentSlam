@@ -1,42 +1,38 @@
 # Setup Status
 
-## Prompt 1 Outcome
+## Prompt 4 Outcome
 
-Prompt 1 bootstrap tasks are complete at the repository-initialization level.
+Prompt 4 closes Phase 1 into a reviewable replay-backed semantic mapping demo. The repo now has a validated Isaac asset pair, a ROS topic driven mapper, replay and operator scripts, and current validation evidence.
 
-## Created or Updated Foundations
+## Current Environment Snapshot
 
-- git repository initialized on `main`
-- `origin` configured for `https://github.com/AdamPengG/AgentSlam.git`
-- directory skeleton created for docs, reports, scripts, refs, ROS workspace, maps, bags, and docker
-- `.gitignore` created with ignores for `refs/`, `bags/`, build artifacts, caches, and logs
-- `.codex/config.toml` created with multi-agent enabled and a project-level `gitnexus` MCP server
-- agent configs created for `pm`, `repo_researcher`, `setup_dev`, `bridge_dev`, `mapping_dev`, `nav_dev`, and `tester`
-- root `AGENTS.md` created with repository, interface, verification, and coordination rules
-- initial docs created for project context, plans, interfaces, dataflow, and evaluation
-- reports created for Git status, Isaac discovery, blockers, and overall setup status
+- requested shell tools available: `11/11`
+- preferred Isaac launcher: `/home/peng/IsaacSim/_build/linux-x86_64/release/isaac-sim.sh`
+- preferred Isaac Python: `/home/peng/IsaacSim/_build/linux-x86_64/release/python.sh`
+- preferred scene: `/home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Environments/Office/office.usd`
+- preferred robot: `/home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/NVIDIA/NovaCarter/nova_carter.usd`
+- ROS runtime Python: `/usr/bin/python3`
 
-## Git Readiness
+## Current Repo Snapshot
 
-- branch state: ready on `main`
-- remote state: `origin` configured
-- identity state: `git user.name` and `git user.email` are both present
-- commit/push state: intentionally not performed
+- branch: `main`
+- tracking: `origin/main`
+- latest pushed commit: `3b8df71`
+- Prompt 3 and Prompt 4 work remains local only and has not been pushed
+- refs refresh: `11/11` successful
+- GitNexus main repo status: indexed and up to date at commit `3b8df71`
 
-## Open Items
+## Prompt 4 Runtime Snapshot
 
-- Isaac Sim executable path still needs confirmation
-- environment audit and bootstrap validation are still pending for Prompt 2
-- upstream reference repositories have not yet been cloned by design
+- offline fixture baseline: passing
+- headless Isaac Office + Nova validation: passing
+- Phase 0 bridge smoke: passing
+- Phase 1 replay demo: passing
+- top-level office demo script: passing
+- colcon build for active packages: passing
 
-## Validation Snapshot
+## Remaining Preconditions For A Live Demo
 
-- `.codex/config.toml` and all agent TOML files parse successfully
-- required Prompt 1 docs and reports are present
-- branch check confirmed `main`
-- remote check confirmed `origin` points to `https://github.com/AdamPengG/AgentSlam.git`
-- `.gitignore` contains the required ignores for refs, bags, build outputs, caches, and logs
-
-## Next Action
-
-Exit and restart Codex so it reloads `.codex/config.toml` and `AGENTS.md`, then continue with Prompt 2: multi-agent bootstrap and environment audit.
+- confirm Codex CLI trust state and Multi-agents toggle if you want UI-level multi-agent orchestration
+- replace the replay publisher with a real Isaac ROS topic bridge
+- add TF and `/clock` to the live bring-up path if Phase 2 depends on them directly

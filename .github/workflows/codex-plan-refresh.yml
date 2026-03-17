@@ -1,0 +1,37 @@
+name: codex-plan-refresh
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: codex-chatgpt-auth
+  cancel-in-progress: false
+
+jobs:
+  refresh-plan:
+    runs-on:
+      - self-hosted
+      - linux
+      - agentslam
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run plan refresh
+        shell: bash
+        run: |
+          set -euo pipefail
+          bash scripts/ops/refresh_plan.sh
+
+      - name: Upload plan refresh outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-plan-refresh-${{ github.run_id }}
+          path: |
+            reports/plan_refresh/
+            artifacts/ops/codex/
+

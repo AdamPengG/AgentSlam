@@ -1,0 +1,27 @@
+bridge_defaults:
+  isaac_launcher: /home/peng/IsaacSim/_build/linux-x86_64/release/isaac-sim.sh
+  isaac_python: /home/peng/IsaacSim/_build/linux-x86_64/release/python.sh
+  preferred_scene_hint: office
+  preferred_scene_candidate: /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Environments/Office/office.usd
+  preferred_robot_candidate: /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/NVIDIA/NovaCarter/nova_carter.usd
+  fallback_robot_candidates:
+    - /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/Clearpath/Jackal/jackal.usd
+    - /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/Clearpath/Dingo/dingo.usd
+    - /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/Turtlebot/Turtlebot3/turtlebot3_burger.usd
+sensor_policy:
+  use_rgb: true
+  use_depth: true
+  use_camera_info: true
+  use_imu: true
+  use_gt_pose: true
+  use_lidar: false
+topics:
+  rgb: /agentslam/camera/rgb/image_raw
+  depth: /agentslam/camera/depth/image_raw
+  camera_info: /agentslam/camera/rgb/camera_info
+  imu: /agentslam/imu/data
+  gt_pose: /agentslam/gt/odom
+  detections: /agentslam/semantic_detections
+  tf: /tf
+  tf_static: /tf_static
+  clock: /clock

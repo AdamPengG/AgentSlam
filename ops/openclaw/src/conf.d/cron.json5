@@ -1,0 +1,9 @@
+{
+  "enabled": true,
+  "maxConcurrentRuns": 1,
+  "sessionRetention": "6h",
+  "runLog": {
+    "maxBytes": "1mb",
+    "keepLines": 800
+  }
+}

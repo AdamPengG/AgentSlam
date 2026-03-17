@@ -1,0 +1,14 @@
+{
+  "gateway": { "$include": "./conf.d/gateway.json5" },
+  "session": { "$include": "./conf.d/session.json5" },
+  "channels": { "$include": "./conf.d/telegram.json5" },
+  "tools": { "$include": "./conf.d/tools.json5" },
+  "plugins": { "$include": "./conf.d/plugins.json5" },
+  "agents": { "$include": "./conf.d/agents.json5" },
+  "cron": { "$include": "./conf.d/cron.json5" },
+  "skills": { "$include": "./conf.d/skills.json5" },
+  "browser": { "$include": "./conf.d/browser.json5" },
+  "canvasHost": { "$include": "./conf.d/canvas.json5" },
+  "discovery": { "$include": "./conf.d/discovery.json5" },
+  "notes": { "$include": "./conf.d/notes.json5" }
+}

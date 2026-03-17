@@ -1,0 +1,19 @@
+semantic_mapper:
+  data_source_mode: fixture
+  merge_distance_m: 0.75
+  export_path: /home/peng/AgentSlam/artifacts/phase1/synthetic_semantic_map.json
+  query_output_dir: /home/peng/AgentSlam/artifacts/phase1
+  query_examples:
+    - chair
+    - table
+  topics:
+    rgb: /agentslam/camera/rgb/image_raw
+    depth: /agentslam/camera/depth/image_raw
+    camera_info: /agentslam/camera/rgb/camera_info
+    imu: /agentslam/imu/data
+    localization_pose: /agentslam/localization/odom
+    gt_pose_fallback: /agentslam/gt/odom
+    detections: /agentslam/semantic_detections
+  representation:
+    kind: object_centroid_list
+    rationale: Minimal offline-verifiable representation for Phase 1 before heavier 2D grid or scene graph work.

@@ -1,0 +1,40 @@
+{
+  "allowBundled": [
+    "healthcheck",
+    "session-logs"
+  ],
+  "load": {
+    "extraDirs": [
+      "~/.openclaw/skills"
+    ]
+  },
+  "install": {
+    "nodeManager": "npm"
+  },
+  "entries": {
+    "agentslam-orchestrator": {
+      "enabled": true
+    },
+    "agentslam-phase0-isaac-bridge": {
+      "enabled": true
+    },
+    "agentslam-phase1-gt-semantic-map": {
+      "enabled": true
+    },
+    "agentslam-onemaplike-roadmap": {
+      "enabled": true
+    },
+    "agentslam-nightly-eval": {
+      "enabled": true
+    },
+    "agentslam-blocker-triage": {
+      "enabled": true
+    },
+    "agentslam-safe-exec-policy": {
+      "enabled": true
+    },
+    "agentslam-telegram-notify": {
+      "enabled": true
+    }
+  }
+}

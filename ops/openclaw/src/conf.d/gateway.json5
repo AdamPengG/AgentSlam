@@ -1,0 +1,10 @@
+{
+  "mode": "local",
+  "bind": "loopback",
+  "port": 18789,
+  "auth": {
+    "mode": "token",
+    "token": "${OPENCLAW_GATEWAY_TOKEN}"
+  },
+  "trustedProxies": []
+}

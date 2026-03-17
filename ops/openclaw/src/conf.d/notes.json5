@@ -1,0 +1,5 @@
+{
+  "sourceLayout": "repo-fragments-rendered-to-runtime-json",
+  "runtimeModeTarget": "acpx-preferred-with-codex-cli-fallback",
+  "liveDeployPolicy": "dry-run-first"
+}

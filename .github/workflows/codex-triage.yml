@@ -1,0 +1,48 @@
+name: codex-triage
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_path:
+        description: "Failing log file or artifact directory to inspect"
+        required: true
+        type: string
+      report_path:
+        description: "Optional output report path"
+        required: false
+        default: ""
+        type: string
+
+concurrency:
+  group: codex-chatgpt-auth
+  cancel-in-progress: false
+
+jobs:
+  triage:
+    runs-on:
+      - self-hosted
+      - linux
+      - agentslam
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run failure triage
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -n "${{ inputs.report_path }}" ]]; then
+            bash scripts/ops/triage_failure.sh --input "${{ inputs.input_path }}" --report "${{ inputs.report_path }}"
+          else
+            bash scripts/ops/triage_failure.sh --input "${{ inputs.input_path }}"
+          fi
+
+      - name: Upload triage outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-triage-${{ github.run_id }}
+          path: |
+            reports/triage/
+            artifacts/ops/codex/

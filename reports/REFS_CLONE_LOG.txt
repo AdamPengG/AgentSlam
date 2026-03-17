@@ -1,0 +1,41 @@
+[fetch] IsaacSim-ros_workspaces
+Fetching origin
+[fetch] navigation2
+Fetching origin
+[fetch] slam_toolbox
+Fetching origin
+[fetch] vision_opencv
+Fetching origin
+[fetch] message_filters
+Fetching origin
+[fetch] OneMap
+Fetching origin
+[fetch] HOV-SG
+Fetching origin
+[fetch] concept-graphs
+Fetching origin
+[fetch] DROID-SLAM
+Fetching origin
+Synchronizing submodule url for 'thirdparty/lietorch'
+Synchronizing submodule url for 'thirdparty/lietorch/eigen'
+Synchronizing submodule url for 'thirdparty/pytorch_scatter'
+[fetch] MASt3R-SLAM
+Fetching origin
+Synchronizing submodule url for 'thirdparty/eigen'
+Synchronizing submodule url for 'thirdparty/in3d/thirdparty/pyimgui'
+Synchronizing submodule url for 'thirdparty/in3d/thirdparty/pyimgui/imgui-cpp'
+[fetch] GitNexus
+Fetching origin
+Reference repository sync complete: /home/peng/AgentSlam/refs
+Successful repositories: 11
+  - IsaacSim-ros_workspaces
+  - navigation2
+  - slam_toolbox
+  - vision_opencv
+  - message_filters
+  - OneMap
+  - HOV-SG
+  - concept-graphs
+  - DROID-SLAM
+  - MASt3R-SLAM
+  - GitNexus

@@ -1,0 +1,85 @@
+{
+  "intrinsics": {
+    "fx": 525.0,
+    "fy": 525.0,
+    "cx": 320.0,
+    "cy": 240.0
+  },
+  "frames": [
+    {
+      "frame_id": "office_frame_000",
+      "pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0,
+        "z": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 318.0,
+          "pixel_y": 245.0,
+          "depth_m": 1.9,
+          "confidence": 0.97
+        },
+        {
+          "label": "desk",
+          "pixel_x": 412.0,
+          "pixel_y": 236.0,
+          "depth_m": 2.8,
+          "confidence": 0.91
+        }
+      ]
+    },
+    {
+      "frame_id": "office_frame_001",
+      "pose": {
+        "x": 0.2,
+        "y": 0.0,
+        "yaw": 0.03,
+        "z": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 314.0,
+          "pixel_y": 242.0,
+          "depth_m": 1.8,
+          "confidence": 0.95
+        },
+        {
+          "label": "cabinet",
+          "pixel_x": 462.0,
+          "pixel_y": 238.0,
+          "depth_m": 3.3,
+          "confidence": 0.88
+        }
+      ]
+    },
+    {
+      "frame_id": "office_frame_002",
+      "pose": {
+        "x": 0.45,
+        "y": 0.04,
+        "yaw": 0.05,
+        "z": 0.0
+      },
+      "detections": [
+        {
+          "label": "desk",
+          "pixel_x": 404.0,
+          "pixel_y": 235.0,
+          "depth_m": 2.7,
+          "confidence": 0.9
+        },
+        {
+          "label": "cabinet",
+          "pixel_x": 448.0,
+          "pixel_y": 240.0,
+          "depth_m": 3.2,
+          "confidence": 0.9
+        }
+      ]
+    }
+  ]
+}

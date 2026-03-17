@@ -1,0 +1,14 @@
+[
+  {
+    "agentId": "planner",
+    "match": {
+      "channel": "webchat"
+    }
+  },
+  {
+    "agentId": "planner",
+    "match": {
+      "channel": "telegram"
+    }
+  }
+]

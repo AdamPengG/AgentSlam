@@ -1,0 +1,15 @@
+localized_mapping:
+  localization:
+    primary_pose: /visual_slam/tracking/odometry
+    fallback_pose: /agentslam/gt/odom
+    normalized_pose: /agentslam/localization/odom
+    status: /agentslam/localization/status
+  semantic_mapper:
+    output_path: /home/peng/AgentSlam/artifacts/phase1/office_nova_localized_semantic_map.json
+    query_output_dir: /home/peng/AgentSlam/artifacts/phase1/localized_queries
+  geometric_mapper:
+    output_path: /home/peng/AgentSlam/artifacts/phase1/office_nova_localized_occupancy.json
+    resolution_m: 0.25
+  notes:
+    - GT odometry is the current validated fallback source.
+    - The normalized localization topic is the swap point for a future VSLAM backend.

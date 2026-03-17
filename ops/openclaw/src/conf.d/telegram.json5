@@ -1,0 +1,32 @@
+{
+  "defaults": {
+    "groupPolicy": "disabled",
+    "heartbeat": {
+      "showOk": false,
+      "showAlerts": true,
+      "useIndicator": true
+    }
+  },
+  "telegram": {
+    "enabled": true,
+    "botToken": "${TELEGRAM_BOT_TOKEN}",
+    "dmPolicy": "pairing",
+    "allowFrom": [],
+    "groupPolicy": "disabled",
+    "groups": {},
+    "replyToMode": "first",
+    "streamMode": "off",
+    "linkPreview": false,
+    "timeoutSeconds": 30,
+    "retry": {
+      "attempts": 5,
+      "minDelayMs": 500,
+      "maxDelayMs": 10000,
+      "jitter": 0.2
+    },
+    "network": {
+      "autoSelectFamily": false
+    },
+    "proxy": "${HTTPS_PROXY}"
+  }
+}

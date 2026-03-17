@@ -1,0 +1,24 @@
+isaac_phase1_vslam:
+  overlay_setup: /home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash
+  preferred_launch: /home/peng/AgentSlam/ros_ws/launch/phase1_vslam_stereo.launch.py
+  preferred_mode: stereo_rectified
+  contract_source: gs4_front_stereo_foundation
+  topics:
+    left_image: /front_stereo_camera/left/image_rect_color
+    left_camera_info: /front_stereo_camera/left/camera_info
+    right_image: /front_stereo_camera/right/image_rect_color
+    right_camera_info: /front_stereo_camera/right/camera_info
+    raw_vslam_odom: /visual_slam/tracking/odometry
+    normalized_odom: /agentslam/localization/odom
+    localization_status: /agentslam/localization/status
+  parameters:
+    use_sim_time: false
+    enable_image_denoising: true
+    rectified_images: true
+    enable_slam_visualization: false
+    enable_landmarks_view: false
+    enable_observations_view: false
+  notes:
+    - current GS4-hosted isaac_ros_visual_slam integration is stereo-only
+    - the previous RGBD trial is not the supported contract for this backend version
+    - downstream AgentSlam consumers should continue to subscribe only to /agentslam/localization/odom

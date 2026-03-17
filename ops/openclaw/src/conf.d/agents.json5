@@ -1,0 +1,179 @@
+{
+  "defaults": {
+    "repoRoot": "/home/peng/AgentSlam",
+    "workspace": "~/.openclaw/workspace",
+    "model": {
+      "primary": "codex-cli/gpt-5.3-codex",
+      "fallbacks": [
+        "codex-cli/gpt-5.4"
+      ]
+    },
+    "cliBackends": {
+      "codex-cli": {
+        "command": "/home/peng/miniconda3/bin/codex",
+        "resumeArgs": [
+          "exec",
+          "resume",
+          "{sessionId}",
+          "--json",
+          "--skip-git-repo-check"
+        ],
+        "resumeOutput": "jsonl"
+      }
+    },
+    "heartbeat": {
+      "every": "0m",
+      "target": "none",
+      "lightContext": true
+    },
+    "typingMode": "never",
+    "compaction": {
+      "mode": "safeguard"
+    },
+    "sandbox": {
+      "mode": "all",
+      "scope": "agent",
+      "workspaceAccess": "rw"
+    },
+    "maxConcurrent": 1,
+    "subagents": {
+      "maxConcurrent": 1
+    }
+  },
+  "list": [
+    {
+      "id": "planner",
+      "default": true,
+      "name": "AgentSlam Planner",
+      "workspace": "~/.openclaw/workspace",
+      "agentDir": "~/.openclaw/agents/planner/agent",
+      "model": "codex-cli/gpt-5.3-codex",
+      "runtime": {
+        "type": "acp",
+        "acp": {
+          "agent": "codex",
+          "backend": "acpx",
+          "mode": "persistent",
+          "cwd": "/home/peng/AgentSlam"
+        }
+      },
+      "tools": {
+        "profile": "coding",
+        "deny": [
+          "exec",
+          "process",
+          "browser",
+          "canvas",
+          "nodes",
+          "cron",
+          "gateway"
+        ],
+        "elevated": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": "coder",
+      "name": "AgentSlam Coder",
+      "workspace": "~/.openclaw/workspaces/agentslam/coder",
+      "agentDir": "~/.openclaw/agents/coder/agent",
+      "model": {
+        "primary": "codex-cli/gpt-5.4",
+        "fallbacks": [
+          "codex-cli/gpt-5.3-codex"
+        ]
+      },
+      "runtime": {
+        "type": "acp",
+        "acp": {
+          "agent": "codex",
+          "backend": "acpx",
+          "mode": "persistent",
+          "cwd": "/home/peng/AgentSlam"
+        }
+      },
+      "tools": {
+        "profile": "coding",
+        "deny": [
+          "group:web",
+          "group:ui",
+          "group:nodes",
+          "cron",
+          "gateway"
+        ],
+        "elevated": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": "evaluator",
+      "name": "AgentSlam Evaluator",
+      "workspace": "~/.openclaw/workspaces/agentslam/evaluator",
+      "agentDir": "~/.openclaw/agents/evaluator/agent",
+      "model": {
+        "primary": "codex-cli/gpt-5.4",
+        "fallbacks": [
+          "codex-cli/gpt-5.3-codex"
+        ]
+      },
+      "runtime": {
+        "type": "acp",
+        "acp": {
+          "agent": "codex",
+          "backend": "acpx",
+          "mode": "persistent",
+          "cwd": "/home/peng/AgentSlam"
+        }
+      },
+      "tools": {
+        "profile": "coding",
+        "deny": [
+          "group:web",
+          "group:ui",
+          "group:nodes",
+          "cron",
+          "gateway"
+        ],
+        "elevated": {
+          "enabled": false
+        }
+      }
+    },
+    {
+      "id": "reporter",
+      "name": "AgentSlam Reporter",
+      "workspace": "~/.openclaw/workspaces/agentslam/reporter",
+      "agentDir": "~/.openclaw/agents/reporter/agent",
+      "model": "codex-cli/gpt-5.3-codex",
+      "runtime": {
+        "type": "acp",
+        "acp": {
+          "agent": "codex",
+          "backend": "acpx",
+          "mode": "persistent",
+          "cwd": "/home/peng/AgentSlam"
+        }
+      },
+      "tools": {
+        "profile": "messaging",
+        "deny": [
+          "write",
+          "edit",
+          "apply_patch",
+          "exec",
+          "process",
+          "group:web",
+          "group:ui",
+          "group:nodes",
+          "cron",
+          "gateway"
+        ],
+        "elevated": {
+          "enabled": false
+        }
+      }
+    }
+  ]
+}

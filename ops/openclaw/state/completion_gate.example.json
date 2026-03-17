@@ -1,0 +1,10 @@
+{
+  "phase1_semantic_map": {
+    "build_pass": false,
+    "smoke_pass": false,
+    "fixture_or_replay_pass": false,
+    "handoff_ready": false,
+    "telegram_notified": false,
+    "awaiting_user_review": false
+  }
+}

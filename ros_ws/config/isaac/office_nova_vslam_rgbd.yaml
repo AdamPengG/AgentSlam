@@ -1,0 +1,24 @@
+isaac_phase1_vslam:
+  status: deprecated
+  overlay_setup: /home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash
+  preferred_launch: /home/peng/AgentSlam/ros_ws/launch/phase1_vslam_rgbd.launch.py
+  preferred_mode: rgbd
+  reference_bag: /home/peng/slam_reference/isaac_ros_visual_slam/isaac_ros_visual_slam/test/test_cases/rosbags/rgbd_static
+  topics:
+    rgb: /agentslam/camera/rgb/image_raw
+    camera_info: /agentslam/camera/rgb/camera_info
+    depth: /agentslam/camera/depth/image_raw
+    raw_vslam_odom: /visual_slam/tracking/odometry
+    normalized_odom: /agentslam/localization/odom
+    localization_status: /agentslam/localization/status
+  parameters:
+    tracking_mode: 2
+    depth_scale_factor_live_float32: 1.0
+    depth_scale_factor_reference_bag: 1000.0
+    base_frame_live: nova_base_link
+    base_frame_reference_bag: camera_link
+    camera_optical_frames_live: [nova_camera_rgb]
+    camera_optical_frames_reference_bag: [camera_color_optical_frame]
+  notes:
+    - deprecated after contract triage showed the current GS4-hosted backend is stereo-oriented
+    - kept only as historical evidence for the retired RGBD experiment

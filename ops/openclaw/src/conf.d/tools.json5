@@ -1,0 +1,25 @@
+{
+  "profile": "minimal",
+  "deny": [
+    "group:web",
+    "group:ui",
+    "group:nodes",
+    "group:automation"
+  ],
+  "fs": {
+    "workspaceOnly": true
+  },
+  "exec": {
+    "backgroundMs": 10000,
+    "timeoutSec": 1800,
+    "cleanupMs": 1800000,
+    "notifyOnExit": true,
+    "notifyOnExitEmptySuccess": false,
+    "applyPatch": {
+      "enabled": true
+    }
+  },
+  "elevated": {
+    "enabled": false
+  }
+}

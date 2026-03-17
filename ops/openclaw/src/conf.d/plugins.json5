@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "allow": [
+    "acpx",
+    "telegram",
+    "memory-core"
+  ],
+  "entries": {
+    "acpx": {
+      "enabled": true
+    },
+    "telegram": {
+      "enabled": true
+    },
+    "memory-core": {
+      "enabled": true
+    }
+  },
+  "slots": {
+    "memory": "memory-core",
+    "contextEngine": "legacy"
+  }
+}

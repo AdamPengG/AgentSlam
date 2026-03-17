@@ -1,0 +1,106 @@
+{
+  "intrinsics": {
+    "fx": 525.0,
+    "fy": 525.0,
+    "cx": 320.0,
+    "cy": 240.0
+  },
+  "frames": [
+    {
+      "frame_id": "frame_000",
+      "pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 320.0,
+          "pixel_y": 240.0,
+          "depth_m": 2.0,
+          "confidence": 0.95
+        },
+        {
+          "label": "table",
+          "pixel_x": 420.0,
+          "pixel_y": 240.0,
+          "depth_m": 3.0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_001",
+      "pose": {
+        "x": 0.5,
+        "y": 0.2,
+        "yaw": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 300.0,
+          "pixel_y": 240.0,
+          "depth_m": 1.7,
+          "confidence": 0.91
+        },
+        {
+          "label": "cabinet",
+          "pixel_x": 360.0,
+          "pixel_y": 240.0,
+          "depth_m": 2.7,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_002",
+      "pose": {
+        "x": 1.4,
+        "y": 1.0,
+        "yaw": 0.1
+      },
+      "detections": [
+        {
+          "label": "cabinet",
+          "pixel_x": 320.0,
+          "pixel_y": 240.0,
+          "depth_m": 1.8,
+          "confidence": 0.88
+        },
+        {
+          "label": "sofa",
+          "pixel_x": 260.0,
+          "pixel_y": 240.0,
+          "depth_m": 2.3,
+          "confidence": 0.93
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_003",
+      "pose": {
+        "x": 2.3,
+        "y": 0.6,
+        "yaw": -0.2
+      },
+      "detections": [
+        {
+          "label": "desk",
+          "pixel_x": 320.0,
+          "pixel_y": 240.0,
+          "depth_m": 1.9,
+          "confidence": 0.9
+        },
+        {
+          "label": "plant",
+          "pixel_x": 380.0,
+          "pixel_y": 220.0,
+          "depth_m": 1.6,
+          "confidence": 0.87
+        }
+      ]
+    }
+  ]
+}

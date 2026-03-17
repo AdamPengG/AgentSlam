@@ -44,3 +44,7 @@ config_file = "agents/nav-dev.toml"
 [agents.tester]
 description = "Verification engineer for build checks, smoke tests, validation reports, and release readiness."
 config_file = "agents/tester.toml"
+
+[agents.ops_dev]
+description = "Operations engineer for workflows, codex exec automation, runner runbooks, and 24x7 repo ops scaffolding."
+config_file = "agents/ops-dev.toml"

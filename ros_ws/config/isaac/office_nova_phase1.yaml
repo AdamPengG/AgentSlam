@@ -1,0 +1,18 @@
+isaac_phase1:
+  preferred_launcher: /home/peng/IsaacSim/_build/linux-x86_64/release/isaac-sim.sh
+  preferred_python: /home/peng/IsaacSim/_build/linux-x86_64/release/python.sh
+  preferred_mode: bag_replay
+  live_mode_available: manual_validation_only
+  scene_usd: /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Environments/Office/office.usd
+  robot_usd: /home/peng/isaacsim_assets/Assets/Isaac/5.1/Isaac/Robots/NVIDIA/NovaCarter/nova_carter.usd
+  replay_fixture: /home/peng/AgentSlam/fixtures/semantic_mapping/office_nova_replay_scene.json
+  topics:
+    rgb: /agentslam/camera/rgb/image_raw
+    depth: /agentslam/camera/depth/image_raw
+    camera_info: /agentslam/camera/rgb/camera_info
+    imu: /agentslam/imu/data
+    gt_pose: /agentslam/gt/odom
+    detections: /agentslam/semantic_detections
+  outputs:
+    replay_map: /home/peng/AgentSlam/artifacts/phase1/office_nova_replay_semantic_map.json
+    replay_query_dir: /home/peng/AgentSlam/artifacts/phase1/replay_queries

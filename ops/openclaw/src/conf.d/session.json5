@@ -1,0 +1,39 @@
+{
+  "dmScope": "main",
+  "reset": {
+    "mode": "idle",
+    "idleMinutes": 120
+  },
+  "resetByType": {
+    "direct": {
+      "mode": "idle",
+      "idleMinutes": 90
+    },
+    "group": {
+      "mode": "idle",
+      "idleMinutes": 30
+    },
+    "thread": {
+      "mode": "daily",
+      "atHour": 4
+    }
+  },
+  "resetTriggers": [
+    "/new",
+    "/reset"
+  ],
+  "maintenance": {
+    "mode": "enforce",
+    "pruneAfter": "14d",
+    "maxEntries": 200,
+    "rotateBytes": "5mb",
+    "resetArchiveRetention": "14d",
+    "maxDiskBytes": "200mb",
+    "highWaterBytes": "150mb"
+  },
+  "threadBindings": {
+    "enabled": false,
+    "idleHours": 0,
+    "maxAgeHours": 0
+  }
+}

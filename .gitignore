@@ -1,5 +1,6 @@
 # Local reference repositories
 refs/
+.gitnexus/
 
 # Runtime outputs and datasets
 bags/
@@ -12,6 +13,7 @@ bags/
 build/
 install/
 log/
+artifacts/
 
 # Python caches and virtualenvs
 .venv/
@@ -23,3 +25,8 @@ __pycache__/
 
 # OS files
 .DS_Store
+
+# Local operator/reference files
+.claude/
+CLAUDE.md
+FromGPT5.4PRO/

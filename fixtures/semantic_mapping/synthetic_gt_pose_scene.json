@@ -1,0 +1,51 @@
+{
+  "intrinsics": {
+    "fx": 525.0,
+    "fy": 525.0,
+    "cx": 320.0,
+    "cy": 240.0
+  },
+  "frames": [
+    {
+      "frame_id": "frame_000",
+      "pose": {
+        "x": 0.0,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 320.0,
+          "pixel_y": 240.0,
+          "depth_m": 2.0,
+          "confidence": 0.95
+        },
+        {
+          "label": "table",
+          "pixel_x": 420.0,
+          "pixel_y": 240.0,
+          "depth_m": 3.0,
+          "confidence": 0.9
+        }
+      ]
+    },
+    {
+      "frame_id": "frame_001",
+      "pose": {
+        "x": 0.15,
+        "y": 0.0,
+        "yaw": 0.0
+      },
+      "detections": [
+        {
+          "label": "chair",
+          "pixel_x": 315.0,
+          "pixel_y": 240.0,
+          "depth_m": 1.9,
+          "confidence": 0.92
+        }
+      ]
+    }
+  ]
+}

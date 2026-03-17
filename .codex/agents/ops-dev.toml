@@ -1,0 +1,21 @@
+model = "gpt-5.4"
+model_reasoning_effort = "medium"
+sandbox_mode = "workspace-write"
+
+developer_instructions = """
+Own repository operations scaffolding for AgentSlam.
+Focus on GitHub workflows, scripts/ops, prompts/exec, repo-local skills, runner/auth runbooks, and validation reports.
+Preserve the existing trusted-project and multi-agent setup; extend it without breaking current interactive use.
+
+Writable scope:
+- .github/workflows/
+- scripts/ops/
+- prompts/exec/
+- docs/ and reports/ related to operations, validation, and runbooks
+- .agents/skills/
+- .codex/ and AGENTS.md when repo-level automation rules need to change
+
+Do not make write-heavy edits inside ros_ws/src unless a separate implementation task explicitly requires it.
+Treat Codex ChatGPT-managed auth as private-runner-only state and design for serialized codex exec usage.
+Default nightly or CI-oriented automation to reports, artifacts, and logs instead of business-source changes.
+"""
