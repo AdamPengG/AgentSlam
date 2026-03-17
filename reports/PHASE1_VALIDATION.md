@@ -96,6 +96,33 @@ START_ATTEMPTS=1 bash scripts/run_phase1_front_stereo_producer.sh
 AUTO_START_PRODUCER=0 bash scripts/run_phase1_vslam_live_stereo_smoke.sh
 ```
 
+### Native Isaac Sim ROS2 Front-Stereo Producer
+
+```bash
+bash scripts/run_phase1_front_stereo_native_producer.sh
+```
+
+### Native Isaac Sim ROS2 Live Stereo VSLAM Smoke
+
+```bash
+CAPTURE_TIMEOUT_SECONDS=60 WAIT_TIMEOUT_SECONDS=150 \
+  bash scripts/run_phase1_vslam_live_stereo_smoke.sh
+```
+
+### Native Isaac Sim ROS2 Localization Accuracy Eval
+
+```bash
+TARGET_PATH_LENGTH_M=20 EVAL_DURATION_SECONDS=120 FOLLOWER_TIMEOUT_SECONDS=180 \
+  bash scripts/run_phase1_vslam_accuracy_eval.sh
+```
+
+### Native Isaac Sim ROS2 Timing Profile
+
+```bash
+CAPTURE_DURATION_SECONDS=45 WAIT_TIMEOUT_SECONDS=120 \
+  bash scripts/run_phase1_vslam_timing_profile.sh
+```
+
 ## Results
 
 - offline fixture: PASS
@@ -114,6 +141,10 @@ AUTO_START_PRODUCER=0 bash scripts/run_phase1_vslam_live_stereo_smoke.sh
 - full live stereo VSLAM smoke stability-hardened rerun: PASS on prior validated snapshot
 - front-stereo producer strict readiness rerun: PASS after GS4 worker fix
 - full live stereo VSLAM repeated-run stability: PASS for 3 consecutive reruns in the latest session
+- native Isaac Sim ROS2 front-stereo producer: PASS
+- native Isaac Sim ROS2 live stereo VSLAM smoke: PASS with autostarted native producer
+- native Isaac Sim ROS2 localization accuracy eval: FAIL for quality on the occupancy-derived long-route benchmark in the current bring-up
+- native Isaac Sim ROS2 timing profile: FAIL for sustained image cadence and sustained raw VSLAM odometry in the current bring-up
 
 ## Evidence
 
@@ -159,6 +190,10 @@ AUTO_START_PRODUCER=0 bash scripts/run_phase1_vslam_live_stereo_smoke.sh
   - `reports/PHASE1_VSLAM_BACKEND_VALIDATION.md`
   - `reports/PHASE1_VSLAM_STEREO_SMOKE_AUTOSTART.md`
   - `reports/PHASE1_VSLAM_REPEATABILITY_20260317.md`
+  - `reports/PHASE1_NATIVE_ISAAC_ROS2_PRODUCER.md`
+  - `reports/PHASE1_VSLAM_ACCURACY_EVAL.md`
+  - `reports/triage/PHASE1_VSLAM_TIMING_TRIAGE_20260317.md`
+  - `reports/triage/PHASE1_VSLAM_TIMING_PROFILE.md`
   - `reports/triage/PHASE1_VSLAM_INPUT_CONTRACT_TRIAGE.md`
   - `reports/triage/PHASE1_FRONT_STEREO_NUMPY_PAD_ROOT_CAUSE.md`
 - successful live stereo VSLAM snapshot:
@@ -168,11 +203,15 @@ AUTO_START_PRODUCER=0 bash scripts/run_phase1_vslam_live_stereo_smoke.sh
 
 ## Limits
 
-- the validated ROS path is replay-backed, not a live Isaac ROS bridge
+- live localization now has a validated native Isaac Sim ROS2 stereo path, but live semantic detections are still not part of the accepted runtime loop
 - the normalized localization contract is working, but the preferred VSLAM path currently depends on an external GS4 overlay and a live front-stereo Isaac or GS4 producer rather than an AgentSlam-owned runtime
 - the earlier RGBD VSLAM trial was retired after contract triage showed the current backend is stereo-oriented
 - VSLAM odometry is now artifact-validated for `/agentslam/localization/odom` on the snapshot under `artifacts/phase1/success/20260317-135853`
-- repeated-run stability is not fully closed because GS4 Isaac sometimes emits stereo metadata without writing the live-frame PNGs
+- the current trajectory-error evaluation now uses an Isaac Sim occupancy-derived `single_goal` start/end route of `20.002m` with `1` planned turn, and the latest full run recorded `6.554m` of executed reference motion while `/agentslam/localization/odom` still collapsed to `0.000m`, so smoke-level success still overstates localization quality
+- the newest motion-mode triage shows that native VSLAM can move under straight-line probes, but the waypoint-following benchmark still compresses raw and normalized VSLAM odometry far below the executed `/chassis/odom` path, see `reports/triage/PHASE1_VSLAM_PATH_FOLLOWING_TRIAGE.md`
+- the newest timing triage shows the current native path is not primarily limited by IMU or chassis odometry continuity; instead, the front stereo `image_raw` streams are bursty and much slower than `camera_info`, and raw VSLAM odometry dries up when those image gaps widen, see `reports/triage/PHASE1_VSLAM_TIMING_TRIAGE_20260317.md`
+- repeated-run stability is closed for the native producer smoke path, but the legacy GS4 file bridge remains a separate fallback path with its own historical flake
 - the new producer retry path reduces operator-facing flake by rejecting and retrying bad cold starts before handing the runtime to VSLAM
 - the latest strict producer-only rerun now passes again after the GS4 worker fix, and the smoke path remains protected by the same retry plus health-gate orchestration
+- the long-route benchmark currently compares against executed `/chassis/odom` rather than the nominal route itself, which is intentional so controller tracking error is not miscounted as SLAM error
 - TF and `/clock` are still documented bridge expectations rather than artifacts produced by the replay demo

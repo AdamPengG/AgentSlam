@@ -34,7 +34,9 @@ Phase 0 is acceptable when all of the following are true:
 - replay-backed ROS topic chain into the mapper: passing
 - normalized localization-backed semantic and geometric mapping chain: passing
 - stereo `isaac_ros_visual_slam` launch surface and idle smoke through the normalized localization contract: passing
-- full live stereo `isaac_ros_visual_slam` smoke through the normalized localization contract: pending a live front-stereo producer on this host
+- full live stereo `isaac_ros_visual_slam` smoke through the normalized localization contract: passing with the native Isaac Sim ROS2 front-stereo producer
+- native Isaac Sim ROS2 localization accuracy eval now uses an Isaac Sim occupancy-derived start/end route with obstacle-aware planning and a start pose normalized to `(0, 0, 0)`, but current quality still fails expectations because waypoint-following motion produces far less VSLAM path growth than `/chassis/odom`
+- native Isaac Sim ROS2 timing triage now shows the strongest current bottleneck is bursty `image_raw` delivery rather than IMU continuity or localization-adapter continuity
 - live Isaac bring-up: still outside the acceptance gate for this run
 
 ## Phase 1 Acceptance Preview
@@ -57,6 +59,8 @@ Minimum runtime acceptance should include:
 - replay demo: PASS
 - localized mapping demo: PASS
 - operator office demo: PASS
+- native Isaac Sim ROS2 front-stereo VSLAM smoke: PASS
+- native Isaac Sim ROS2 localization accuracy eval: FAIL for quality, despite smoke-level bring-up passing
 - live Isaac ROS bridge: not yet required for this phase, therefore not a failure
 
 ## Candidate Metrics
@@ -68,13 +72,20 @@ Minimum runtime acceptance should include:
 - the first semantic outputs can be produced without inventing custom messages
 - the localization contract is stable enough that GT fallback can later be replaced by VSLAM without changing mapper outputs
 - the preferred VSLAM backend should be validated through the same `/agentslam/localization/odom` contract before any live Isaac semantic acceptance claims
+- the native Isaac Sim producer should keep only the front stereo pair enabled, with static extrinsics supplied outside the simulator
+- smoke-level success is not sufficient for localization acceptance; the path also needs an artifact-backed trajectory error check
+- the preferred accuracy harness should derive a drivable start/end route from Isaac Sim occupancy data, bias the initial segment toward the commanded start heading, normalize both trajectories to the same start pose convention, and compare executed reference odometry against `/agentslam/localization/odom`
 
 ## Decision Gates Before Phase 2
 
 - keep the replay path as a regression harness
-- add a real live Isaac ROS publisher that matches the current topic contract
-- complete the live Isaac Office + Nova front-stereo VSLAM smoke
+- keep the native Isaac Sim ROS2 producer as the preferred localization smoke path
+- fix native visual tracking quality before treating live localization as evaluation-ready
+- debug the waypoint-following motion profile until the occupancy-derived `20m` benchmark produces VSLAM path growth that is commensurate with executed `/chassis/odom`
+- add IMU-backed reruns to the same benchmark once the native producer exposes an IMU topic
+- add live semantic detections on top of the now-validated native localization path
 - decide whether TF and `/clock` become hard acceptance requirements
+- keep the Isaac Sim live-localization line checkpointed at the current timing/accuracy evidence level until image cadence is improved
 
 ## Prompt 5 Ops Acceptance
 

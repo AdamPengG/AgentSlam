@@ -57,21 +57,24 @@
 1. `scripts/run_phase1_vslam_live_stereo_smoke.sh` sources:
    - `/opt/ros/humble/setup.bash`
    - `/home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash`
-2. The smoke expects a live Isaac or GS4 front-stereo producer to already be publishing:
-   - `/front_stereo_camera/left/image_rect_color`
+2. By default, the smoke autostarts `scripts/run_phase1_front_stereo_native_producer.sh` when stereo topics are absent.
+3. The native producer loads Office + Nova Carter directly inside Isaac Sim and keeps only the front stereo pair enabled while disabling the extra hawk cameras and lidar render products.
+4. The preferred native topic contract is:
+   - `/front_stereo_camera/left/image_raw`
    - `/front_stereo_camera/left/camera_info`
-   - `/front_stereo_camera/right/image_rect_color`
+   - `/front_stereo_camera/right/image_raw`
    - `/front_stereo_camera/right/camera_info`
    - `/tf_static`
-3. `ros_ws/launch/phase1_vslam_stereo.launch.py` starts `isaac_ros_visual_slam` against that stereo contract.
-4. `isaac_ros_visual_slam` publishes raw odometry on `/visual_slam/tracking/odometry`.
-5. `localization_adapter_pkg.ros_node` republishes that stream as `/agentslam/localization/odom`.
-6. The smoke exports:
+5. AgentSlam supplies static extrinsics for `base_link -> chassis_link -> front_stereo_camera_*_optical`; Isaac Sim does not own the SLAM map or odom transform chain.
+6. `ros_ws/launch/phase1_vslam_stereo.launch.py` starts `isaac_ros_visual_slam` against that stereo contract with `rectified_images=false` and `base_frame=chassis_link`.
+7. `isaac_ros_visual_slam` publishes raw odometry on `/visual_slam/tracking/odometry`.
+8. `localization_adapter_pkg.ros_node` republishes that stream as `/agentslam/localization/odom`.
+9. The smoke exports:
    - `artifacts/phase1/office_nova_vslam_live_raw_odom.txt`
    - `artifacts/phase1/office_nova_vslam_live_localization_odom.txt`
    - `artifacts/phase1/office_nova_vslam_live_status.txt`
    - `artifacts/phase1/office_nova_vslam_live_localization_runtime.json`
-7. The previous RGBD reference-bag trial is retained only as historical evidence; it is no longer the preferred acceptance path for the current backend.
+10. The previous GS4 file bridge and RGBD reference-bag trials are retained only as fallback or historical evidence; they are no longer the preferred acceptance path for the current backend.
 
 ## Topic-Level Flow
 

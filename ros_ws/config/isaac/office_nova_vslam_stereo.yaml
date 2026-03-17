@@ -1,12 +1,12 @@
 isaac_phase1_vslam:
   overlay_setup: /home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash
   preferred_launch: /home/peng/AgentSlam/ros_ws/launch/phase1_vslam_stereo.launch.py
-  preferred_mode: stereo_rectified
-  contract_source: gs4_front_stereo_foundation
+  preferred_mode: stereo_native_raw
+  contract_source: isaac_native_front_stereo_contract
   topics:
-    left_image: /front_stereo_camera/left/image_rect_color
+    left_image: /front_stereo_camera/left/image_raw
     left_camera_info: /front_stereo_camera/left/camera_info
-    right_image: /front_stereo_camera/right/image_rect_color
+    right_image: /front_stereo_camera/right/image_raw
     right_camera_info: /front_stereo_camera/right/camera_info
     raw_vslam_odom: /visual_slam/tracking/odometry
     normalized_odom: /agentslam/localization/odom
@@ -14,11 +14,22 @@ isaac_phase1_vslam:
   parameters:
     use_sim_time: false
     enable_image_denoising: true
-    rectified_images: true
+    rectified_images: false
+    base_frame: chassis_link
     enable_slam_visualization: false
     enable_landmarks_view: false
     enable_observations_view: false
+  legacy_gs4_topics:
+    left_image: /front_stereo_camera/left/image_rect_color
+    left_camera_info: /front_stereo_camera/left/camera_info
+    right_image: /front_stereo_camera/right/image_rect_color
+    right_camera_info: /front_stereo_camera/right/camera_info
+  legacy_gs4_parameters:
+    base_frame: base_link
+    rectified_images: true
   notes:
     - current GS4-hosted isaac_ros_visual_slam integration is stereo-only
+    - the preferred Phase 1 producer is now the native Isaac Sim Office + Nova Carter ROS2 front-stereo path
+    - the GS4 file bridge remains available as a fallback, but it is no longer the default smoke path
     - the previous RGBD trial is not the supported contract for this backend version
     - downstream AgentSlam consumers should continue to subscribe only to /agentslam/localization/odom

@@ -8,6 +8,7 @@ VSLAM_OVERLAY="${VSLAM_OVERLAY:-/home/peng/GS4/isaac_ros_visual_slam_ws/install/
 WAIT_TIMEOUT_SECONDS="${WAIT_TIMEOUT_SECONDS:-120}"
 CAPTURE_TIMEOUT_SECONDS="${CAPTURE_TIMEOUT_SECONDS:-120}"
 AUTO_START_PRODUCER="${AUTO_START_PRODUCER:-1}"
+PRODUCER_MODE="${PRODUCER_MODE:-isaac_native_ros2}"
 PRODUCER_WAIT_TIMEOUT_SECONDS="${PRODUCER_WAIT_TIMEOUT_SECONDS:-120}"
 PRODUCER_START_ATTEMPTS="${PRODUCER_START_ATTEMPTS:-5}"
 STOP_AUTOSTARTED_PRODUCER_ON_EXIT="${STOP_AUTOSTARTED_PRODUCER_ON_EXIT:-1}"
@@ -24,10 +25,20 @@ STATUS_SAMPLE="${ARTIFACT_DIR}/office_nova_vslam_live_status.txt"
 VSLAM_LOG="${LOG_DIR}/phase1_vslam_live_stereo_launch.log"
 LOCALIZATION_LOG="${LOG_DIR}/phase1_vslam_live_stereo_localization.log"
 
-LEFT_IMAGE_TOPIC="${LEFT_IMAGE_TOPIC:-/front_stereo_camera/left/image_rect_color}"
 LEFT_CAMERA_INFO_TOPIC="${LEFT_CAMERA_INFO_TOPIC:-/front_stereo_camera/left/camera_info}"
-RIGHT_IMAGE_TOPIC="${RIGHT_IMAGE_TOPIC:-/front_stereo_camera/right/image_rect_color}"
 RIGHT_CAMERA_INFO_TOPIC="${RIGHT_CAMERA_INFO_TOPIC:-/front_stereo_camera/right/camera_info}"
+
+if [[ "${PRODUCER_MODE}" == "isaac_native_ros2" ]]; then
+  : "${LEFT_IMAGE_TOPIC:=/front_stereo_camera/left/image_raw}"
+  : "${RIGHT_IMAGE_TOPIC:=/front_stereo_camera/right/image_raw}"
+  : "${RECTIFIED_IMAGES:=false}"
+  : "${VSLAM_BASE_FRAME:=chassis_link}"
+else
+  : "${LEFT_IMAGE_TOPIC:=/front_stereo_camera/left/image_rect_color}"
+  : "${RIGHT_IMAGE_TOPIC:=/front_stereo_camera/right/image_rect_color}"
+  : "${RECTIFIED_IMAGES:=true}"
+  : "${VSLAM_BASE_FRAME:=base_link}"
+fi
 
 mkdir -p "${ARTIFACT_DIR}" "${LOG_DIR}"
 rm -f \
@@ -114,25 +125,33 @@ wait_for_stereo_messages() {
 if ! wait_for_stereo_messages 1; then
   if [[ "${AUTO_START_PRODUCER}" == "0" ]]; then
     echo "required live stereo messages not available." >&2
-    echo "start the Isaac/GS4 front-stereo producer first, then retry this smoke." >&2
+    echo "start the requested front-stereo producer first, then retry this smoke." >&2
     exit 1
   fi
-  echo "live stereo messages not present; starting the GS4 front-stereo producer..." >&2
-  WAIT_TIMEOUT_SECONDS="${PRODUCER_WAIT_TIMEOUT_SECONDS}" START_ATTEMPTS="${PRODUCER_START_ATTEMPTS}" \
-    bash "${ROOT_DIR}/scripts/run_phase1_front_stereo_producer.sh" >&2
+  if [[ "${PRODUCER_MODE}" == "isaac_native_ros2" ]]; then
+    echo "live stereo messages not present; starting the native Isaac Sim front-stereo producer..." >&2
+    WAIT_TIMEOUT_SECONDS="${PRODUCER_WAIT_TIMEOUT_SECONDS}" \
+      bash "${ROOT_DIR}/scripts/run_phase1_front_stereo_native_producer.sh" >&2
+  else
+    echo "live stereo messages not present; starting the GS4 front-stereo producer..." >&2
+    WAIT_TIMEOUT_SECONDS="${PRODUCER_WAIT_TIMEOUT_SECONDS}" START_ATTEMPTS="${PRODUCER_START_ATTEMPTS}" \
+      bash "${ROOT_DIR}/scripts/run_phase1_front_stereo_producer.sh" >&2
+  fi
   AUTOSTARTED_PRODUCER=1
 fi
 
-if ! /usr/bin/python3 "${ROOT_DIR}/scripts/wait_for_stereo_runtime.py" \
-  --runtime-dir "${FRONT_STEREO_RUNTIME_DIR}" \
-  --timeout-seconds "${WAIT_TIMEOUT_SECONDS}" \
-  --min-frame-idx "${MIN_RUNTIME_FRAME_IDX}" \
-  --require-frame-progress "${RUNTIME_PROGRESS_SAMPLES}" \
-  --progress-interval-seconds "${RUNTIME_PROGRESS_INTERVAL_SECONDS}" \
-  >/dev/null; then
-  echo "front-stereo runtime did not become materially ready in time." >&2
-  echo "inspect ${ROOT_DIR}/artifacts/phase1/logs/front_stereo_producer" >&2
-  exit 1
+if [[ "${PRODUCER_MODE}" != "isaac_native_ros2" ]]; then
+  if ! /usr/bin/python3 "${ROOT_DIR}/scripts/wait_for_stereo_runtime.py" \
+    --runtime-dir "${FRONT_STEREO_RUNTIME_DIR}" \
+    --timeout-seconds "${WAIT_TIMEOUT_SECONDS}" \
+    --min-frame-idx "${MIN_RUNTIME_FRAME_IDX}" \
+    --require-frame-progress "${RUNTIME_PROGRESS_SAMPLES}" \
+    --progress-interval-seconds "${RUNTIME_PROGRESS_INTERVAL_SECONDS}" \
+    >/dev/null; then
+    echo "front-stereo runtime did not become materially ready in time." >&2
+    echo "inspect ${ROOT_DIR}/artifacts/phase1/logs/front_stereo_producer" >&2
+    exit 1
+  fi
 fi
 
 /usr/bin/python3 -m localization_adapter_pkg.ros_node \
@@ -145,6 +164,8 @@ ros2 launch "${ROOT_DIR}/ros_ws/launch/phase1_vslam_stereo.launch.py" \
   left_camera_info_topic:="${LEFT_CAMERA_INFO_TOPIC}" \
   right_image_topic:="${RIGHT_IMAGE_TOPIC}" \
   right_camera_info_topic:="${RIGHT_CAMERA_INFO_TOPIC}" \
+  rectified_images:="${RECTIFIED_IMAGES}" \
+  base_frame:="${VSLAM_BASE_FRAME}" \
   >"${VSLAM_LOG}" 2>&1 &
 VSLAM_PID=$!
 

@@ -11,6 +11,7 @@ def generate_launch_description() -> LaunchDescription:
     right_image_topic = LaunchConfiguration("right_image_topic")
     right_camera_info_topic = LaunchConfiguration("right_camera_info_topic")
     use_sim_time = LaunchConfiguration("use_sim_time")
+    base_frame = LaunchConfiguration("base_frame")
     enable_image_denoising = LaunchConfiguration("enable_image_denoising")
     rectified_images = LaunchConfiguration("rectified_images")
     enable_slam_visualization = LaunchConfiguration("enable_slam_visualization")
@@ -24,6 +25,7 @@ def generate_launch_description() -> LaunchDescription:
         parameters=[
             {
                 "use_sim_time": use_sim_time,
+                "base_frame": base_frame,
                 "enable_image_denoising": enable_image_denoising,
                 "rectified_images": rectified_images,
                 "enable_slam_visualization": enable_slam_visualization,
@@ -67,6 +69,7 @@ def generate_launch_description() -> LaunchDescription:
                 default_value="/front_stereo_camera/right/camera_info",
             ),
             DeclareLaunchArgument("use_sim_time", default_value="false"),
+            DeclareLaunchArgument("base_frame", default_value="base_link"),
             DeclareLaunchArgument("enable_image_denoising", default_value="true"),
             DeclareLaunchArgument("rectified_images", default_value="true"),
             DeclareLaunchArgument("enable_slam_visualization", default_value="false"),

@@ -105,6 +105,7 @@ Exit criteria:
 - the offline exploration demo has been built, unit-tested, and artifact-validated
 - a real `isaac_ros_visual_slam` bring-up path now exists through an external overlay and a stereo-aligned launch contract
 - full end-to-end VSLAM validation now depends on a live front-stereo Isaac or GS4 producer on this host
+- the Isaac Sim live-localization workstream is checkpointed at the native front-stereo + timing-triage stage; recovery should resume from image-throughput debugging rather than from geometry or adapter debugging
 
 ## Prompt 5: 24x7 Ops Enablement
 

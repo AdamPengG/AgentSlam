@@ -10,18 +10,19 @@
 - mitigation: in Codex CLI, mark the project as trusted and enable Multi-agents with `/experimental` if needed, then restart Codex
 - blocking level: does not block shell-side execution
 
-### B-004: Live Isaac ROS topic bridge is still not a validated acceptance path
+### B-004: Live Isaac ROS topic bridge is validated for localization, but live semantic detections are still not part of the acceptance path
 
-- status: open
-- impact: Prompt 4 closes Phase 1 with a replay-backed ROS chain, but not with a real Isaac GUI or live bridge publishing ROS topics into the mapper
+- status: narrowed
+- impact: AgentSlam can now consume a real Isaac Sim ROS2 stereo stream for VSLAM localization, but the semantic mapper still relies on replay or fixture detections rather than a validated live perception source
 - evidence:
-  - `scripts/run_isaac_office_nova.sh` validates `office.usd` plus `nova_carter.usd` headlessly
-  - `scripts/run_phase0_bridge_smoke.sh` validates the topic contract through the replay publisher
-  - no command in this prompt produced a live Isaac ROS2 image or IMU stream from the simulator itself
+  - `scripts/run_phase1_front_stereo_native_producer.sh` now brings up a native Isaac Sim Office + Nova ROS2 front-stereo producer
+  - `scripts/run_phase1_vslam_live_stereo_smoke.sh` now passes on the native path and exports `artifacts/phase1/office_nova_vslam_live_localization_runtime.json` with `active_source=primary`
+  - the native producer emits live ROS2 stereo images and camera info from Isaac Sim instead of using the GS4 file bridge
 - mitigation:
-  - use `IsaacSim-ros_workspaces` plus the validated release launcher pair to wire a real Office + Nova ROS graph
-  - preserve the replay path as the fallback regression harness
-- blocking level: does not block Phase 1 review, but blocks claiming a live Isaac ROS demo
+  - keep the native front-stereo producer as the preferred localization acceptance source
+  - preserve the replay path as the semantic regression harness
+  - add a live semantic detection producer on top of the now-validated native localization path
+- blocking level: does not block live localization claims, but still blocks claiming a full live semantic mapping demo
 
 ### B-005: ROS runtime must use system Python, not the active conda Python
 
@@ -77,16 +78,48 @@
 ### B-009: Preferred VSLAM backend depends on an external overlay instead of an AgentSlam-owned workspace
 
 - status: open
-- impact: AgentSlam can now source a real `isaac_ros_visual_slam` backend from `/home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash`, but the dependency is still external and live Isaac Office + Nova input is not yet the validated source
+- impact: AgentSlam can now source a real `isaac_ros_visual_slam` backend from `/home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash`, and live native Isaac Office + Nova input is validated, but the backend dependency is still external to this repo
 - evidence:
   - `ros2 pkg prefix isaac_ros_visual_slam` succeeds after sourcing `/home/peng/GS4/isaac_ros_visual_slam_ws/install/setup.bash`
   - `ros_ws/launch/phase1_vslam_stereo.launch.py` now defines the AgentSlam stereo VSLAM bring-up contract
-  - `artifacts/phase1/office_nova_localization_runtime.json` still shows the replay-backed localized demo using fallback odometry
+  - `scripts/run_phase1_vslam_live_stereo_smoke.sh` now passes with the native Isaac Sim ROS2 producer and writes `artifacts/phase1/office_nova_vslam_live_localization_runtime.json`
 - mitigation:
   - keep `/agentslam/localization/odom` as the stable consumer-facing topic while sourcing the external overlay for smoke and early bring-up
   - move the VSLAM dependency into an AgentSlam-owned workspace or document it as a formal external prerequisite
-  - validate the live Isaac Office + Nova front-stereo topic stream as the acceptance source
+  - keep the native Isaac Office + Nova front-stereo topic stream as the acceptance source until an in-repo backend is available
 - blocking level: does not block VSLAM smoke validation, but blocks claiming a self-contained or live Isaac VSLAM localization stack
+
+### B-011: Native Isaac Sim ROS2 VSLAM smoke passes, but localization quality is not yet acceptable
+
+- status: open
+- impact: the native Isaac Sim ROS2 front-stereo path can bring up `isaac_ros_visual_slam` and switch `/agentslam/localization/odom` to the primary source, but current trajectory quality is poor enough that smoke-level success overstates real localization readiness
+- evidence:
+  - `reports/PHASE1_VSLAM_ACCURACY_EVAL.md` now measures localization against executed `/chassis/odom` on an Isaac Sim occupancy-derived start/end route with start pose normalized to `(0, 0, 0)`
+  - the latest evaluation artifact `artifacts/phase1/vslam_accuracy/20260317-183445` planned a `20.002m` route with `1` turn and recorded:
+    - `translation_rmse_m = 5.5615`
+    - `yaw_rmse_deg = 65.161`
+    - `reference_path_length_m = 6.554`
+    - `estimate_path_length_m = 0.000`
+    - `rpe_translation_rmse_m = 0.1657`
+    - `rpe_yaw_rmse_deg = 4.728`
+  - `reports/triage/PHASE1_VSLAM_PATH_FOLLOWING_TRIAGE.md` shows:
+    - the native producer and stereo images do change under motion
+    - straight-line and stationary-then-move probes can produce moving VSLAM odometry
+    - the waypoint-following benchmark drives `/chassis/odom` much farther than raw `/visual_slam/tracking/odometry`
+  - `reports/triage/PHASE1_VSLAM_TIMING_TRIAGE_20260317.md` shows a stronger bottleneck split:
+    - `front_stereo_imu/imu` and `/chassis/odom` stay near `50-54 Hz`
+    - `front_stereo_camera/*/camera_info` stays near `26 Hz`
+    - `front_stereo_camera/*/image_raw` is bursty and collapses to roughly `0.8-3.9 Hz` with multi-second gaps
+    - raw `/visual_slam/tracking/odometry` is sparse or absent on the worst capture windows
+    - enabling viewport updates in headless mode did not improve image throughput
+- mitigation:
+  - treat `scripts/run_phase1_vslam_live_stereo_smoke.sh` as a connectivity smoke, not a quality gate
+  - keep the occupancy-derived start/end benchmark as the localization quality gate
+  - debug the waypoint-following motion profile and camera-input quality until raw VSLAM path growth is commensurate with `/chassis/odom`
+  - keep IMU in the timing captures, but prioritize fixing native front-hawk image throughput before blaming IMU availability
+  - investigate native front-hawk render-product configuration and image conversion cost, because `camera_info` continuity and IMU continuity are already materially better than `image_raw`
+  - keep trajectory-error evaluation in the loop before claiming live localization quality
+- blocking level: blocks claiming that live native localization quality is ready, but does not block using the path for continued bring-up and debugging
 
 ### B-010: GS4 Isaac front-stereo runtime is intermittently unstable across reruns
 

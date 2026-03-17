@@ -54,7 +54,21 @@ These remain part of the live bridge target, but Prompt 4 acceptance does not de
 
 ## Live Stereo VSLAM Input Contract
 
-### Preferred Upstream Topics
+### Preferred Native Upstream Topics
+
+- `/front_stereo_camera/left/image_raw`
+  - type: `sensor_msgs/msg/Image`
+- `/front_stereo_camera/left/camera_info`
+  - type: `sensor_msgs/msg/CameraInfo`
+- `/front_stereo_camera/right/image_raw`
+  - type: `sensor_msgs/msg/Image`
+- `/front_stereo_camera/right/camera_info`
+  - type: `sensor_msgs/msg/CameraInfo`
+- `/tf_static`
+  - type: `tf2_msgs/msg/TFMessage`
+  - note: AgentSlam supplies the fixed `base_link -> chassis_link -> front_stereo_camera_*_optical` extrinsics with static publishers; map and odom dynamics stay owned by SLAM
+
+### Legacy GS4 Fallback Topics
 
 - `/front_stereo_camera/left/image_rect_color`
   - type: `sensor_msgs/msg/Image`
@@ -67,8 +81,10 @@ These remain part of the live bridge target, but Prompt 4 acceptance does not de
 
 ### Notes
 
-- this is the preferred `isaac_ros_visual_slam` input contract for the current GS4-hosted backend
+- the preferred Phase 1 runtime now uses Isaac Sim's native ROS2 front-stereo publisher with raw stereo images and static extrinsics
+- the GS4 file bridge remains a fallback contract for troubleshooting or comparison, but it is no longer the default smoke path
 - the old AgentSlam-owned RGBD VSLAM trial is no longer the preferred path for this backend version
+- native Isaac Sim may still expose auxiliary `/chassis/odom`, `/tf`, and IMU topics; the localization contract ignores those extras and only depends on stereo plus static extrinsics
 - downstream AgentSlam consumers should continue to depend only on `/agentslam/localization/odom`
 
 ## Mapping-Facing Contract
